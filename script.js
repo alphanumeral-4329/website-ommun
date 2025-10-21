@@ -116,55 +116,48 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 100)
   })
 
-  // ===== HAMBURGER MENU FUNCTIONALITY =====
+// ===== HAMBURGER MENU FUNCTIONALITY (FIXED) =====
+document.addEventListener("DOMContentLoaded", () => {
   const hamburgerBtn = document.getElementById("hamburger-btn")
   const mobileNav = document.getElementById("mobile-nav")
 
-  if (hamburgerBtn && mobileNav) {
-    hamburgerBtn.addEventListener("click", () => {
-      console.log("[v0] Hamburger clicked, current active state:", hamburgerBtn.classList.contains("active"))
+  if (!hamburgerBtn || !mobileNav) return
 
-      hamburgerBtn.classList.toggle("active")
-      mobileNav.classList.toggle("active")
+  // Toggle menu open/close
+  hamburgerBtn.addEventListener("click", () => {
+    hamburgerBtn.classList.toggle("active")
+    mobileNav.classList.toggle("active")
+    document.body.classList.toggle("no-scroll") // Use CSS class instead of overflow style
+  })
 
-      console.log("[v0] After toggle, active state:", hamburgerBtn.classList.contains("active"))
+  // Close menu when clicking on nav links (event delegation)
+  mobileNav.addEventListener("click", (e) => {
+    if (e.target.classList.contains("mobile-nav-link")) {
+      hamburgerBtn.classList.remove("active")
+      mobileNav.classList.remove("active")
+      document.body.classList.remove("no-scroll")
+    }
+  })
 
-      // Prevent body scroll when menu is open
-      if (mobileNav.classList.contains("active")) {
-        document.body.style.overflow = "hidden"
-      } else {
-        document.body.style.overflow = ""
-      }
-    })
+  // Close menu when clicking outside
+  document.addEventListener("click", (e) => {
+    if (!e.target.closest("#mobile-nav") && !e.target.closest("#hamburger-btn")) {
+      hamburgerBtn.classList.remove("active")
+      mobileNav.classList.remove("active")
+      document.body.classList.remove("no-scroll")
+    }
+  })
 
-    // Close menu when clicking on nav links
-    const mobileNavLinks = document.querySelectorAll(".mobile-nav-link")
-    mobileNavLinks.forEach((link) => {
-      link.addEventListener("click", () => {
-        hamburgerBtn.classList.remove("active")
-        mobileNav.classList.remove("active")
-        document.body.style.overflow = ""
-      })
-    })
+  // Close menu on Escape key
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && mobileNav.classList.contains("active")) {
+      hamburgerBtn.classList.remove("active")
+      mobileNav.classList.remove("active")
+      document.body.classList.remove("no-scroll")
+    }
+  })
+})
 
-    // Close menu when clicking outside
-    document.addEventListener("click", (e) => {
-      if (!hamburgerBtn.contains(e.target) && !mobileNav.contains(e.target)) {
-        hamburgerBtn.classList.remove("active")
-        mobileNav.classList.remove("active")
-        document.body.style.overflow = ""
-      }
-    })
-
-    // Close menu on escape key
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && mobileNav.classList.contains("active")) {
-        hamburgerBtn.classList.remove("active")
-        mobileNav.classList.remove("active")
-        document.body.style.overflow = ""
-      }
-    })
-  }
 
   // ===== PER-SECOND COUNTDOWN TO OCT 24, 2025 12:00 AM IST (+05:30) =====
   // Prefer locked IDs (cd-d/cd-h/cd-m/cd-s), fallback to legacy (cd-days/cd-hours/cd-minutes/cd-seconds)
