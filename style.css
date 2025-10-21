@@ -9,6 +9,10 @@ html {
   scroll-behavior: smooth;
 }
 
+body.no-scroll {
+  overflow: hidden;
+}
+
 body {
   font-family: "DM Sans", sans-serif;
   background-color: #000;
